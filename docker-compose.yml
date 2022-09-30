@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:8.0.30
+    environment:
+      MYSQL_ROOT_PASSWORD: abc123456
+    volumes:
+      - "/root/WorkSpace/ElasticStack/config/mysql/data/:/var/lib/mysql/"
+      - /root/WorkSpace/ElasticStack/config/mysql/conf/my.cnf:/etc/mysql/conf.d/my.cnf"
+    ports:
+      - "3306:3306"
+    networks:
+      - esnet
+  es:
+    container_name: es
+    image: elasticsearch:7.12.1
+    environment:
+      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
+      - "discovery.type=single-node"
+    volumes:
+      - /root/WorkSpace/ElasticStack/config/es/plugins:/usr/share/elasticsearch/plugins
+    ports:
+      - "9300:9300"
+      - 9200:9200
+    networks:
+      - esnet
+  kibana:
+    container_name: kibana
+    image: kibana:7.12.1
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es:9200
+    ports:
+      - 5601:5601
+    depends_on:
+      - es
+    networks:
+      - esnet
+networks:
+  esnet:

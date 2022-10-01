@@ -78,6 +78,24 @@ docker run --rm  \
 # hotel-demo,接受到消息后,对insert/delete队列的消息进行执行会重新调用mysql+es的api更新es中的数据;
 ```
 
+## 修改映射大小
+
+```bash
+vim /etc/sysctl.conf
+
+vm.max_map_count=262144
+
+sysctl -p
+```
+
+## es集群
+
+```bash
+注意给映射文件权限.
+docker-compose -f cluster-docker-compose.yml up -d
+```
+
+- 初始好es集群后,自动进行节点挂点的迁移和还原。但是无法得知如何在运行过程中添加机器...
 
 
 
